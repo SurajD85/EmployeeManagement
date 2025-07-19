@@ -1,51 +1,50 @@
+using Microsoft.EntityFrameworkCore;
+using EmployeeManagement.Infrastructure.Data;
 
-namespace EmployeeManagement.API
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register application services later on 
+
+
+// Add authorization services
+builder.Services.AddAuthorization();
+
+
+// Configure GraphQL
+builder.Services
+    .AddGraphQLServer()
+    .AddQueryType<Query>()
+    .AddMutationType<Mutation>();
+    //.AddAuthorization(); // Optional: if you want to use authorization
+
+var app = builder.Build();
+
+// Ensure the database is created and seeded
+using (var scope = app.Services.CreateScope())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            // Add services to the container.
-            builder.Services.AddAuthorization();
+    // This will create the database and tables if they do not exist
+    await dbContext.Database.MigrateAsync(); // Use Migrate for applying migrations
+    await dbContext.SeedAsync(); // Seed the database with the default user
+}
 
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+app.MapGraphQL(); // Maps the /graphql endpoint
+app.Run();
 
-            var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+// Define your Query class
+public class Query
+{
+    public string Hello() => "Hello World!";
+}
 
-            app.UseAuthorization();
-
-            var summaries = new[]
-            {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
-
-            app.MapGet("/weatherforecast", (HttpContext httpContext) =>
-            {
-                var forecast = Enumerable.Range(1, 5).Select(index =>
-                    new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)]
-                    })
-                    .ToArray();
-                return forecast;
-            })
-            .WithName("GetWeatherForecast")
-            .WithOpenApi();
-
-            app.Run();
-        }
-    }
+// Define your Mutation class (if needed)
+public class Mutation
+{
+    // Mutation methods here
 }
