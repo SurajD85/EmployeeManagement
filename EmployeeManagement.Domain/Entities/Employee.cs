@@ -17,7 +17,9 @@ namespace EmployeeManagement.Domain.Entities
         public DateTime? Birthday { get; set; }
         public string? Remarks { get; set; }
         public string? ProfileImage { get; set; }
-        public int CompanyId { get; set; }
-        public Company Company { get; set; } = null!;
+
+
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
     }
 }

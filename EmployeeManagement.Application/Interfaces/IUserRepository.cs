@@ -2,9 +2,10 @@
 
 namespace EmployeeManagement.Application.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         Task<User> CreateUserAsync(User user);
+
         Task<List<User>> GetAllUsersAsync();
         Task<User?> GetUserByIdAsync(int id);
         Task<bool> UpdateUserAsync(User user);

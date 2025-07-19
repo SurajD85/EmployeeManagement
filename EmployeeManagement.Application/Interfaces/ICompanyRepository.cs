@@ -2,7 +2,7 @@
 
 namespace EmployeeManagement.Application.Interfaces
 {
-    public interface ICompanyService
+    public interface ICompanyRepository
     {
         Task<Company> GetCompanyByIdAsync(int id);
         Task<IEnumerable<Company>> GetAllCompaniesAsync();

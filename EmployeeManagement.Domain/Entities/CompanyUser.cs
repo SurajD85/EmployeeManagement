@@ -1,0 +1,12 @@
+﻿namespace EmployeeManagement.Domain.Entities
+{
+    public class CompanyUser
+    {
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        public int CompanyId { get; set; }
+        public Company Company { get; set; } = null!;
+        public DateTime JoinedDate { get; set; } = DateTime.Now;
+    }
+
+}

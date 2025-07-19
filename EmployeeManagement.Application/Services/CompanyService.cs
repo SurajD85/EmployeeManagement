@@ -1,26 +1,40 @@
-﻿using EmployeeManagement.Application.DTOs;
-using EmployeeManagement.Application.Interfaces;
+﻿using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Domain.Entities;
-using EmployeeManagement.Infrastructure.Data;
 
 namespace EmployeeManagement.Application.Services
 {
     public class CompanyService : ICompanyService
     {
-        private readonly AppDbContext _context;
-        public CompanyService(AppDbContext context)
+        private readonly ICompanyRepository _companyRepository;
+
+        public CompanyService(ICompanyRepository companyRepository)
         {
-            _context = context;
+            _companyRepository = companyRepository;
         }
 
-        public Task<Company> CreateCompanyAsync(CreateCompanyInputDto input)
+        public Task<Company> CreateCompanyAsync(Company company)
         {
-            throw new NotImplementedException();
+           return _companyRepository.CreateCompanyAsync(company);
         }
 
-        public Task<List<Company>> GetAllCompaniesAsync()
+        public Task<bool> DeleteCompanyAsync(int id)
         {
-            throw new NotImplementedException();
+            return _companyRepository.DeleteCompanyAsync(id);
+        }
+
+        public Task<IEnumerable<Company>> GetAllCompaniesAsync()
+        {
+            return _companyRepository.GetAllCompaniesAsync();
+        }
+
+        public Task<Company> GetCompanyByIdAsync(int id)
+        {
+            return _companyRepository.GetCompanyByIdAsync(id);
+        }
+
+        public Task<Company> UpdateCompanyAsync(Company company)
+        {
+            return _companyRepository.UpdateCompanyAsync(company);
         }
     }
 }

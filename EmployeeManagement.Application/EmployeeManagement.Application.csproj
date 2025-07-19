@@ -7,12 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Interfaces\IUnitOfWork.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EmployeeManagement.Domain\EmployeeManagement.Domain.csproj" />
-    <ProjectReference Include="..\EmployeeManagement.Infrastructure\EmployeeManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\" />
   </ItemGroup>
 
 </Project>
