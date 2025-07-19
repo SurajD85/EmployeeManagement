@@ -1,4 +1,4 @@
-namespace EmployeeManagement
+namespace EmployeeManagement.API
 {
     public class WeatherForecast
     {
