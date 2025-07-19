@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EmployeeManagement.Domain\EmployeeManagement.Domain.csproj" />
-    <ProjectReference Include="..\EmployeeManagement.Infrastructure\EmployeeManagement.Infrastructure.csproj" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="15.1.7" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="GraphQL\" />
+    <ProjectReference Include="..\EmployeeManagement.Domain\EmployeeManagement.Domain.csproj" />
+    <ProjectReference Include="..\EmployeeManagement.Infrastructure\EmployeeManagement.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
