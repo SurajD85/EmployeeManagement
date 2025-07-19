@@ -1,6 +1,7 @@
 ﻿using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Application.Services;
 using EmployeeManagement.Domain.Entities;
+using EmployeeManagement.Domain.Enum;
 
 namespace EmployeeManagement.Application.GraphQL.Queries
 {
@@ -44,6 +45,30 @@ namespace EmployeeManagement.Application.GraphQL.Queries
             return allUsers.Where(u => u.IsActive).ToList();
         }
         #endregion
+
+        #region Invitations
+        public async Task<List<Invitation>> GetPendingInvitations(
+        int? companyId,
+        [Service] IInvitationService invitationService,
+        [Service] ICurrentUserService currentUser)
+        {
+            // Filter by company if manager
+            if (currentUser.Role == UserRole.Manager)
+            {
+                companyId = currentUser.CompanyId; // Assuming manager has single company
+            }
+
+            return await invitationService.GetPendingInvitationsAsync(companyId);
+        }
+
+        public async Task<Invitation?> ValidateInvitationToken(
+            string token,
+            [Service] IInvitationService invitationService)
+        {
+            return await invitationService.GetInvitationByTokenAsync(token);
+        }
+        #endregion
+
     }
 
 }

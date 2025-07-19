@@ -116,6 +116,69 @@ namespace EmployeeManagement.Application.GraphQL.Mutations
         }
         #endregion
 
+        #region Invitation
+        public async Task<Invitation> CreateInvitation(
+        string email,
+        UserRole role,
+        int? companyId,
+        [Service] IInvitationService invitationService,
+        [Service] ICurrentUserService currentUser)
+        {
+            // Additional permission checks
+            if (role == UserRole.SystemAdmin && companyId != null)
+                throw new GraphQLException("System Admin invitations cannot have company association");
+
+            if (currentUser.Role == UserRole.Manager && role == UserRole.GeneralEmployee)
+                throw new GraphQLException("Managers cannot invite admins");
+
+            return await invitationService.CreateInvitationAsync(
+                email,
+                role,
+                companyId,
+                currentUser.UserId);
+        }
+
+        public async Task<User> AcceptInvitation(
+            string token,
+            string password,
+            [Service] IInvitationService invitationService,
+            [Service] IUserService userService)
+        {
+            var invitation = await invitationService.GetInvitationByTokenAsync(token);
+            if (invitation == null || invitation.Status != InvitationStatus.Pending)
+                throw new GraphQLException("Invalid or expired invitation");
+
+            var user = new User
+            {
+                Email = invitation.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
+                Role = invitation.Role,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            };
+
+            var createdUser = await userService.CreateUserAsync(user);
+
+            if (invitation.CompanyId.HasValue)
+            {
+                // Add to CompanyUsers table
+                await userService.AddUserToCompanyAsync(createdUser.Id, invitation.CompanyId.Value);
+            }
+
+            await invitationService.CompleteInvitationAsync(invitation.Id);
+            return createdUser;
+        }
+
+        public async Task<bool> CancelInvitation(
+            int invitationId,
+            [Service] IInvitationService invitationService,
+            [Service] ICurrentUserService currentUser)
+        {
+            // Add permission validation
+            return await invitationService.CancelInvitationAsync(invitationId);
+        }
+        #endregion
+
     }
 
 }

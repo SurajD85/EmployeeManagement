@@ -10,6 +10,8 @@ namespace EmployeeManagement.Infrastructure.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
+        public DbSet<CompanyUser> CompanyUsers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -52,24 +54,53 @@ namespace EmployeeManagement.Infrastructure.Data
                 entity.Property(c => c.EstablishedDate).IsRequired();
             });
 
-            // CompanyUser (junction table)
+            // CompanyUser Configuration (Many-to-Many)
             modelBuilder.Entity<CompanyUser>(entity =>
             {
                 entity.HasKey(cu => new { cu.UserId, cu.CompanyId });
+
+                entity.Property(cu => cu.JoinedAt)
+                    .IsRequired();
+
+                // Relationship with User
                 entity.HasOne(cu => cu.User)
-                      .WithMany(u => u.CompanyUsers)
-                      .HasForeignKey(cu => cu.UserId)
-                      .OnDelete(DeleteBehavior.Cascade);
+                    .WithMany(u => u.CompanyUsers)
+                    .HasForeignKey(cu => cu.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Relationship with Company
                 entity.HasOne(cu => cu.Company)
-                      .WithMany()
-                      .HasForeignKey(cu => cu.CompanyId)
-                      .OnDelete(DeleteBehavior.Cascade);
-                entity.Property(cu => cu.JoinedDate).IsRequired();
+                    .WithMany(c => c.CompanyUsers)
+                    .HasForeignKey(cu => cu.CompanyId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Additional index
+                entity.HasIndex(cu => cu.CompanyId);
             });
 
             // Additional configurations (e.g., indexes, if needed)
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Company>().HasIndex(c => c.Name).IsUnique();
+
+            // Configure Invitation entity
+            modelBuilder.Entity<Invitation>(entity =>
+            {
+                entity.HasIndex(i => i.Token).IsUnique();
+                entity.HasIndex(i => i.Email);
+
+                entity.Property(i => i.Status)
+                    .HasConversion<string>();
+
+                entity.HasOne(i => i.Company)
+                    .WithMany()
+                    .HasForeignKey(i => i.CompanyId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(i => i.InvitedBy)
+                    .WithMany()
+                    .HasForeignKey(i => i.InvitedById)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
         }
 
 

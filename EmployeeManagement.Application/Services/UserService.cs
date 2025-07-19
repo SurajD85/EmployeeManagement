@@ -46,5 +46,10 @@ namespace EmployeeManagement.Application.Services
 
             return await _userRepository.DeleteUserAsync(id);
         }
+
+        public async Task<bool> AddUserToCompanyAsync(int userId, int companyId)
+        {
+            return await _userRepository.AddToCompanyAsync(userId, companyId);
+        }
     }
 }

@@ -52,6 +52,24 @@ namespace EmployeeManagement.Infrastructure.Repositories
             return true;
         }
 
+        public async Task<bool> AddToCompanyAsync(int userId, int companyId)
+        {
+            try
+            {
+                _context.CompanyUsers.Add(new CompanyUser
+                {
+                    UserId = userId,
+                    CompanyId = companyId,
+                    JoinedAt = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
     }
 }
