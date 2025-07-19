@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using EmployeeManagement.Infrastructure.Data;
+using EmployeeManagement.Application.Interfaces;
+using EmployeeManagement.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register application services later on 
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
 
 
 // Add authorization services
