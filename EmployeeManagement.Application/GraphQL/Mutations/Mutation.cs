@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.Application.Interfaces;
+using EmployeeManagement.Domain.Auth;
 using EmployeeManagement.Domain.Entities;
 using EmployeeManagement.Domain.Enum;
 
@@ -179,6 +180,15 @@ namespace EmployeeManagement.Application.GraphQL.Mutations
         }
         #endregion
 
+
+        #region Login
+        public async Task<LoginResponse> Login(
+        LoginRequest request,
+        [Service] IAuthService authService)
+        {
+            return await authService.LoginAsync(request);
+        }
+        #endregion
     }
 
 }

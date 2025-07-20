@@ -1,5 +1,6 @@
 ﻿using EmployeeManagement.Application.Interfaces;
 using EmployeeManagement.Domain.Entities;
+using System.ComponentModel.Design;
 
 namespace EmployeeManagement.Application.Services
 {
@@ -50,6 +51,11 @@ namespace EmployeeManagement.Application.Services
         public async Task<bool> AddUserToCompanyAsync(int userId, int companyId)
         {
             return await _userRepository.AddToCompanyAsync(userId, companyId);
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _userRepository.GetUserByEmailAsync(email);
         }
     }
 }

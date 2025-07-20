@@ -1,13 +1,15 @@
 ﻿using EmployeeManagement.Application.Interfaces;
-using EmployeeManagement.Application.Services;
 using EmployeeManagement.Domain.Entities;
 using EmployeeManagement.Domain.Enum;
+using HotChocolate.Authorization;
 
 namespace EmployeeManagement.Application.GraphQL.Queries
 {
+    [Authorize]
     public class Query
     {
         #region Companies
+        //[Authorize]
         public async Task<Company?> GetCompanyById(
             int id,
             [Service] ICompanyService companyService)
@@ -21,7 +23,7 @@ namespace EmployeeManagement.Application.GraphQL.Queries
             return await companyService.GetAllCompaniesAsync();
         }
 
-     
+
         #endregion
 
         #region User
@@ -36,6 +38,13 @@ namespace EmployeeManagement.Application.GraphQL.Queries
             [Service] IUserService userService)
         {
             return await userService.GetUserByIdAsync(id);
+        }
+
+        public async Task<User?> GetUserByEmail(
+           string email,
+           [Service] IUserService userService)
+        {
+            return await userService.GetUserByEmailAsync(email);
         }
 
         public async Task<List<User>> GetActiveUsers(
