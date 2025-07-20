@@ -53,17 +53,6 @@ const [companyToDelete, setCompanyToDelete] = useState<number | null>(null);
       showSnackbar('Failed to save company', 'error');
     }
   };
-
-  // const handleDelete = async (id: number) => {
-  //   try {
-  //     await deleteCompany({ variables: { id } });
-  //     showSnackbar('Company deleted successfully', 'success');
-  //     refetch();
-  //   } catch {
-  //     showSnackbar('Failed to delete company', 'error');
-  //   }
-  // };
-
   const openDeleteDialog = (id: number) => {
   setCompanyToDelete(id);
   setDeleteDialogOpen(true);
