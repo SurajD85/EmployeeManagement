@@ -1,0 +1,27 @@
+From: Your App Name <your@gmail.com>
+Date: Sun, 20 Jul 2025 18:42:45 +0545
+Subject: Invitation to join our system
+Message-Id: <9KK2QLC8QQU4.6AP5DE21VOOQ1@asus>
+To: test.user@example.com
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+
+
+                        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                            <h2 style='color: #1976d2;'>You've been invited!</h2>
+                            <p>You've been invited to join <strong>our system</strong> as a <strong>GeneralEmployee</strong>.</p>
+                            <p style='margin: 20px 0;'>
+                                <a href='https://yourapp.com/accept-invitation?token=lTth1jTUDE63LiGUQzOWtQ' 
+                                   style='background-color: #1976d2; color: white; 
+                                          padding: 10px 20px; text-decoration: none; 
+                                          border-radius: 4px;'>
+                                    Accept Invitation
+                                </a>
+                            </p>
+                            <p>Or copy this link to your browser: <br/>
+                               <code style='word-break: break-all;'>https://yourapp.com/accept-invitation?token=lTth1jTUDE63LiGUQzOWtQ</code>
+                            </p>
+                            <p style='font-size: 12px; color: #777;'>
+                                This invitation link will expire in 7 days.
+                            </p>
+                        </div>

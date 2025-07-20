@@ -38,11 +38,11 @@ namespace EmployeeManagement.Application.Services
             var result = await _invitationRepository.CreateInvitationAsync(email, role, companyId, invitedBy, token, InvitationStatus.Pending);
 
             // Send email
-            await _emailService.SendInvitationEmailAsync(email, token);
+            await _emailService.SendInvitationEmailAsync(email, token, result.Role, result.Company?.Name);
             return result;
         }
 
-       
+
         public async Task<Invitation?> GetInvitationByTokenAsync(string token)
         {
             return await _invitationRepository.GetInvitationByTokenAsync(token);
@@ -50,7 +50,7 @@ namespace EmployeeManagement.Application.Services
 
         public async Task<List<Invitation>> GetPendingInvitationsAsync(int? companyId)
         {
-            return await _invitationRepository.GetPendingInvitationsAsync(companyId);   
+            return await _invitationRepository.GetPendingInvitationsAsync(companyId);
         }
     }
 }

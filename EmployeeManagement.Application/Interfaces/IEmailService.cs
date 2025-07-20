@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EmployeeManagement.Domain.Enum;
 
 namespace EmployeeManagement.Application.Interfaces
 {
     public interface IEmailService
     {
-        Task SendInvitationEmailAsync(string email, string token);
+        Task SendInvitationEmailAsync(string email, string token, UserRole role, string? companyName);
     }
 
 }
