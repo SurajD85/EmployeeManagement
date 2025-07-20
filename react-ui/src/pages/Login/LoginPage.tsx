@@ -1,33 +1,43 @@
 import { useState } from 'react';
 import { Box, Button, TextField, Typography, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { LOGIN_MUTATION } from '../../graphql/loginQueries';
+import { useMutation } from '@apollo/client';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [login, { loading }] = useMutation(LOGIN_MUTATION);
 
-  const handleSubmit = async (e) => {
+  
+ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
 
     try {
-      const res = await fetch('http://localhost:5252/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+      const { data } = await login({
+        variables: {
+          request: {  
+            email,    
+            password  
+          }
+        }
       });
-      if (!res.ok) {
-        throw new Error('Invalid credentials');
-      }
-      const data = await res.json();
-      localStorage.setItem('jwtToken', data.token);
+
+      // Store auth data
+      localStorage.setItem('jwtToken', data.login.token);
+      localStorage.setItem('tokenExpiry', data.login.expiry);
+      localStorage.setItem('userRole', data.login.role);
+      
       navigate('/');
-    } catch (err: any) {
-      setError(err.message || 'Login failed');
+    } catch (err) {
+      setError('Login failed. Please try again');
+      console.error('Login error:', err);
     }
   };
+
 
   return (
     <Box maxWidth={400} mx="auto" mt={10} p={3} boxShadow={3}>
@@ -39,8 +49,8 @@ const LoginPage = () => {
           fullWidth
           required
           margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
           label="Password"
@@ -51,7 +61,7 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>Login</Button>
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }} disabled={loading}> {loading ? 'Logging in...' : 'Login'}</Button>
       </form>
     </Box>
   );
