@@ -26,6 +26,18 @@ builder.Services.AddScoped<IInvitationRepository, InvitationRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .WithOrigins("http://localhost:5174") // your Vite frontend origin
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()); // optional, if using cookies/auth
+});
+
+
 // Add authorization services
 builder.Services.AddAuthorization();
 
@@ -53,17 +65,12 @@ builder.Services
 
 var app = builder.Build();
 
-//// Configure both endpoints
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseGraphQLPlayground(); // Classic GraphQL playground
-//    // OR (for Banana Cake Pop)
-//    app.UseBananaCakePop(); // More modern IDE
-//}
-
 
 // Configure the HTTP request pipeline
 app.UseRouting();
+
+// Use CORS before MapGraphQL
+app.UseCors("AllowFrontend");
 
 // Enable GraphQL endpoint at /graphql
 app.MapGraphQL();
